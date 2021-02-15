@@ -23,7 +23,6 @@ before_script:
     - node_modules/.bin/newman --version  
     
 script:
-- python -m unittest
 - docker build -t travisbuild .
 - docker run --name examp le_api -d -t -p 127.0.0.1:8080:8080 travisbuild
 - docker ps
