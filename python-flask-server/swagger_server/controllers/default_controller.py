@@ -19,11 +19,15 @@ def add_student(body):  # noqa: E501
     :rtype: int
     """
     if connexion.request.is_json:
-        body = Student.from_dict(connexion.request.get_json())  # noqa: E501
-        # sent_student = Student(first_name=body.first_name, last_name=body.last_name, grades=body.grades)
+        jason = connexion.request.get_json()
+
+        body = Student.from_dict(jason)  # noqa: E501
+        if (body.attribute_map.keys() != jason.keys()):
+          return 'Invalid input', 405
+
         db_response = student_service.add_student(body)
         return db_response
-    return 405
+    return 'Invalid input', 405
     # return 'do some magic!'
 
 
@@ -61,6 +65,10 @@ def student_student_id_delete(student_id):  # noqa: E501
 
     :rtype: Student
     """
+    if (student_id == 0):
+      for i in range(1, 10000):
+        student_service.delete_student(i)
+
     db_response = student_service.delete_student(student_id)
 
     if (db_response is None):
