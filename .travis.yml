@@ -24,7 +24,7 @@ before_script:
     
 script:
 - docker build -t travisbuild .
-- docker run --name examp le_api -d -t -p 127.0.0.1:8080:8080 travisbuild
+- docker run --name example_api -d -t -p 127.0.0.1:8080:8080 travisbuild
 - docker ps
 - count=0 && until $(curl --output /dev/null --silent --head --fail http://localhost:8080);
   do printf '.' && sleep 3 && count=$((count+1)) && if [ $count -gt 5 ]; then break;
