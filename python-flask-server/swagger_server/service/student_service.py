@@ -22,7 +22,6 @@ def add_student(student):
     queries.append(query.last_name == student.last_name)
     query = reduce(lambda a, b: a & b, queries)
     res = student_db.search(query)
-    print(res)
     if res:
         return 'already exists', 409
 
@@ -30,18 +29,35 @@ def add_student(student):
     student.student_id = doc_id
     return student.student_id
 
+def get_student_by_last_name(last_name):
+    queries = []
+    query = Query()
+    queries.append(query.last_name == last_name)
+    query = reduce(lambda a, b: a & b, queries)
+    res = student_db.search(query)
+    if not res:
+      return 'student not found', 404
 
-def get_student_by_id(student_id, subject):
+    return res[0]
+
+def get_student_by_id(student_id, subject, last_name):
     student = student_db.get(doc_id=int(student_id))
 
     if not student:
         return student
     
     student = Student.from_dict(student)
-    if not subject:
+    if not subject and not last_name: 
         return student
-    elif (subject in student.grades):
+
+    if subject:
+      if subject in student.grades:
         return student
+    
+    if last_name:
+      if last_name == student.last_name:
+        return student
+
 
 
 def delete_student(student_id):

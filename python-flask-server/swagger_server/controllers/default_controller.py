@@ -22,7 +22,7 @@ def add_student(body):  # noqa: E501
         jason = connexion.request.get_json()
 
         body = Student.from_dict(jason)  # noqa: E501
-        if (body.attribute_map.keys() != jason.keys()):
+        if not body.last_name or not body.first_name:
           return 'Invalid input', 405
 
         db_response = student_service.add_student(body)
@@ -31,7 +31,24 @@ def add_student(body):  # noqa: E501
     # return 'do some magic!'
 
 
-def get_student_by_id(student_id, subject=None):  # noqa: E501
+def get_student_by_last_name(last_name):
+    """Find student by ID
+
+    Returns a student with last_name # noqa: E501
+
+    :param last_name: ID of student to return
+    :type last_name: string
+
+    :rtype: Student
+    """
+    db_response = student_service.get_student_by_last_name(last_name)
+
+    if (db_response is None):
+      return 'student not found', 404
+      
+    return db_response
+
+def get_student_by_id(student_id, subject=None, last_name=None):  # noqa: E501
     """Find student by ID
 
     Returns a single student # noqa: E501
@@ -46,7 +63,7 @@ def get_student_by_id(student_id, subject=None):  # noqa: E501
     # if connexion.request.is_json:
       # body = Student.from_dict(connexion.request.get_json())  # noqa: E501
       # get_student_by_id(student_id, subject)
-    db_response = student_service.get_student_by_id(student_id, subject)
+    db_response = student_service.get_student_by_id(student_id, subject, last_name)
 
     if (db_response is None):
       return 'student not found', 404
