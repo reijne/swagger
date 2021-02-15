@@ -8,7 +8,7 @@ python:
 
 
 before_install:
-  - docker version
+  - docker version 
   - docker info
 install:
     - npm install newman
